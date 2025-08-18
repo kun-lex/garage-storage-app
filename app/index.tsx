@@ -1,64 +1,20 @@
-import { useAuthStore } from '@/api/Onboarding/Actions/AuthSlice';
 import SplashLogo from '@/assets/images/splash-icon.svg';
 import { Redirect } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Platform, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
-type ValidRoute = '/(tabs)/Explore';
-
-export default function index() {
-    const [initialRoute, setInitialRoute] = useState<ValidRoute | null>(null);
+export default function Index() {
     const [isReady, setIsReady] = useState(false);
-    
-    const userEmail = useAuthStore((state) => state.email);
-    const hasHydrated = useAuthStore((state) => state._hasHydrated);
-    const token = useAuthStore((state) => state.token);
 
     useEffect(() => {
-        const determineInitialRoute = async () => {
-            try {
-                console.log('=== Route Determination Debug ===');
-                console.log('Platform:', Platform.OS);
-                console.log('Has hydrated:', hasHydrated);
-                console.log('User email:', userEmail);
-                console.log('Token:', token ? 'exists' : 'null');
-                console.log('=================================');
+        const timer = setTimeout(() => {
+            setIsReady(true);
+        }, 1000); 
 
-                // Wait for store to hydrate
-                if (!hasHydrated) {
-                    console.log('Store not hydrated yet, waiting...');
-                    return;
-                }
+        return () => clearTimeout(timer);
+    }, []);
 
-                // Add platform-specific delay for Android
-                if (Platform.OS === 'android') {
-                    console.log('Android detected, adding delay...');
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
-
-                // Determine route based on auth state
-                // Check both email and token for better reliability
-                const isAuthenticated = (userEmail && userEmail.trim() !== '') || token;
-                
-                if (isAuthenticated) {
-                    console.log('User authenticated, navigating to Home');
-                    setInitialRoute('/(tabs)/Explore');
-                }
-                
-                setIsReady(true);
-            } catch (error) {
-                console.error('Error determining route:', error);
-                // Fallback to onboarding on error
-                setInitialRoute('/(tabs)/Explore');
-                setIsReady(true);
-            }
-        };
-
-        determineInitialRoute();
-    }, [userEmail, hasHydrated, token]);
-
-    // Show loading screen while determining route
-    if (!hasHydrated || !initialRoute || !isReady) {
+    if (!isReady) {
         return (
             <View style={{ 
                 flex: 1, 
@@ -76,6 +32,5 @@ export default function index() {
         );
     }
 
-    console.log('Redirecting to:', initialRoute);
-    return <Redirect href={initialRoute} />;
+    return <Redirect href="/(tabs)/Explore" />;
 }

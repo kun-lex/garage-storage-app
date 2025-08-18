@@ -3,12 +3,9 @@ import React from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 // ICONS
-import AiAssistantIcon from '@/assets/icons/AiAssitantIcon';
-import ArtisanIcon from '@/assets/icons/ArtisanIcon';
-import ExploreIcon from '@/assets/icons/ExploreIcon';
-import HomeIcon from '@/assets/icons/HomeIcon';
-import ProfileIcon from '@/assets/icons/ProfileIcon';
 import { Colors } from '@/constants/Colors';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
 
@@ -43,12 +40,12 @@ export default function TabLayout() {
             title: 'Explore',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <View style={styles.dot} />
+                <Text style={styles.foucedLabel}>Explore</Text>
               ) : (
-                <Text style={styles.label}>Home</Text>
+                <Text style={styles.label}>Explore</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              <HomeIcon width={30} height={30} color={focused ? "#FF725E" : "#656565"} />
+              <AntDesign name="search1" size={24} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
         />
@@ -58,12 +55,12 @@ export default function TabLayout() {
             title: 'Wishlist',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <View style={styles.dot} />
+                <Text style={styles.foucedLabel}>Wishlist</Text>
               ) : (
-                <Text style={styles.label}>Artisan</Text>
+                <Text style={styles.label}>Wishlist</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              <ArtisanIcon width={30} height={30} color={focused ? "#FF725E" : "#656565"} />
+              <AntDesign name="hearto" size={24} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
         />
@@ -74,12 +71,13 @@ export default function TabLayout() {
             title: 'Space',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <View style={styles.dot} />
+                <Text style={styles.foucedLabel}>Space</Text>
               ) : (
-                <Text style={styles.label}>Explore</Text>
+                <Text style={styles.label}>Space</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              <ExploreIcon width={30} height={30} color={focused ? "#FF725E" : "#656565"} />
+              // <MaterialCommunityIcons name="garage-open-variant" size={24} color={focused ? "#FF725E" : "#656565"} />
+              <MaterialIcons name="garage" size={30} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
         />
@@ -90,12 +88,12 @@ export default function TabLayout() {
             title: 'Messages',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <View style={styles.dot} />
+                <Text style={styles.foucedLabel}>Messages</Text>
               ) : (
-                <Text style={styles.label}>Assistant</Text>
+                <Text style={styles.label}>Messages</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              <AiAssistantIcon width={30} height={30} color={focused ? "#FF725E" : "#656565"} />
+              <AntDesign name="message1" size={24} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
         />
@@ -107,12 +105,12 @@ export default function TabLayout() {
             title: 'Log in',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <View style={styles.dot} />
+                <Text style={styles.foucedLabel}>Log in</Text>
               ) : (
-                <Text style={styles.label}>Profile</Text>
+                <Text style={styles.label}>Log in</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              <ProfileIcon width={30} height={30} color={focused ? "#FF725E" : "#656565"} />
+              <AntDesign name="login" size={24} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
         />
@@ -132,6 +130,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_400Regular',
     marginTop: 5,
     color: '#656565'
+  },
+  foucedLabel: {
+    textTransform: 'capitalize',
+    fontSize: 12,
+    fontFamily: 'Poppins_400Regular',
+    marginTop: 5,
+    color: '#FF725E'
   },
   dot: {
     width: 6,
