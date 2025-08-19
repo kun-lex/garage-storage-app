@@ -1,6 +1,6 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SearchModal from "../Modals/SearchModal";
 import { ThemedText } from "../ThemedText";
 
@@ -15,6 +15,7 @@ const HeaderNavWithSearchComponent: React.FC<HeaderNavWithSearchProps> = ({
 }) => {
   const [tabWidths, setTabWidths] = useState<{ [key: string]: number }>({});
   const [modalVisible, setModalVisible] = useState(false);
+  const [scaleAnim] = useState(new Animated.Value(1));
 
   const handleTextLayout = (event: any, tabName: string) => {
     const { width } = event.nativeEvent.layout;
@@ -22,6 +23,20 @@ const HeaderNavWithSearchComponent: React.FC<HeaderNavWithSearchProps> = ({
   };
 
   const openModal = () => {
+    // Add scale animation when pressed
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    
     setModalVisible(true);
   };
 
@@ -39,17 +54,30 @@ const HeaderNavWithSearchComponent: React.FC<HeaderNavWithSearchProps> = ({
     <>
       <View style={styles.container}>
         {/* Search Bar */}
-        <TouchableOpacity style={styles.searchButton} onPress={openModal}>
-          <AntDesign name="search1" size={16} color="#656565" />
-          <ThemedText
-            type="subtitle"
-            fontFamily="poppins"
-            fontSize={14}
-            color="#656565"
+        <Animated.View
+          style={[
+            styles.searchButtonContainer,
+            {
+              transform: [{ scale: scaleAnim }]
+            }
+          ]}
+        >
+          <TouchableOpacity 
+            style={styles.searchButton} 
+            onPress={openModal}
+            activeOpacity={0.8}
           >
-            Start your search
-          </ThemedText>
-        </TouchableOpacity>
+            <AntDesign name="search1" size={16} color="#656565" />
+            <ThemedText
+              type="subtitle"
+              fontFamily="poppins"
+              fontSize={14}
+              color="#656565"
+            >
+              Start your search
+            </ThemedText>
+          </TouchableOpacity>
+        </Animated.View>
 
         {/* Tabs */}
         <View style={styles.tabContainer}>
@@ -163,12 +191,15 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  searchButtonContainer: {
+    width: "90%",
+  },
   searchButton: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
-    width: "90%",
+    width: "100%",
     borderRadius: 20,
     height: 45,
     backgroundColor: "#FFFFFF",
@@ -201,7 +232,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     right: -16,
-    backgroundColor: "#2a3b58",
+    backgroundColor: "#FF725E",
     borderRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 2,

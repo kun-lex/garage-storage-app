@@ -1,39 +1,29 @@
+import { Product } from '@/api/Product/Actions/ProductSlice';
+import { useProduct } from '@/api/Product/Hooks/useProduct';
 import { ThemedText } from '@/components/ThemedText';
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-type SpaceCardProps = {
-    name: string;
-    rating?: number;
-    reviewCount?: number;
-    priceFrom: string;
-    pricePerAdult?: boolean;
-    location: string;
-    imageSource: { uri: string };
-    onPress?: () => void;
-    containerStyle?: object;
-    imageStyle?: object;
+
+type SpaceCardProps = Product & {
+  onPress?: () => void;
+  containerStyle?: object;
+  imageStyle?: object;
+  showPopularTag?: boolean;
 };
 
-const SpaceCard = ({
-  name,
-  rating = 4.0,
-  reviewCount = 5,
-  priceFrom,
-  pricePerAdult = true,
-  location,
-  imageSource,
-  onPress,
-  containerStyle,
-  imageStyle
-}: SpaceCardProps) => {
-  // Generate star rating display
+const SpaceCard = (props: SpaceCardProps) => {
+  const { id, name, rating = 4.0, reviewCount = 5, priceFrom, pricePerAdult = true, location, imageSource, onPress, containerStyle, imageStyle, showPopularTag = false } = props;
+
+  const toggleLike = useProduct((state) => state.toggleLike);
+  const isLiked = useProduct((state) => state.isLiked(id));
+
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
-    
+
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(<FontAwesome key={i} name="star" style={styles.starIcon} />);
@@ -48,49 +38,64 @@ const SpaceCard = ({
 
   return (
     <TouchableOpacity 
-        style={[styles.container, containerStyle]} 
-        onPress={onPress}
-        activeOpacity={0.8}
+      style={[styles.container, containerStyle]} 
+      onPress={onPress}
+      activeOpacity={0.8}
     >
-        {/* Image */}
+      {/* Image */}
+      <View style={styles.imageContainer}>
         <Image 
-            source={imageSource} 
-            style={[styles.image, imageStyle]}
-            resizeMode="cover"
+          source={imageSource} 
+          style={[styles.image, imageStyle]}
+          resizeMode="cover"
         />
-
-        {/* Content */}
-        <View style={styles.content}>
-            {/* Restaurant Name */}
-            <ThemedText type='defaultSemiBold' fontFamily='poppins' fontSize={14}>
-            {name}
+        
+        {/* Popular tag */}
+        {showPopularTag && (
+          <View style={styles.popularTag}>
+            <ThemedText type='default' fontFamily='poppins' fontSize={12} color='#FF6B6B'>
+              Popular
             </ThemedText>
-            
-            {/* Rating */}
-            <View style={styles.ratingContainer}>
-              <ThemedText type='default' fontFamily='poppins' fontSize={12}>
-                {rating.toFixed(1)}
-              </ThemedText>
+          </View>
+        )}
 
-              <View style={{flexDirection: 'row'}}>
-                {renderStars()}
-              </View>
+        {/* Heart Icon */}
+        <TouchableOpacity 
+          style={styles.heartContainer}
+          onPress={() => toggleLike(props)}
+          activeOpacity={0.7}
+        >
+          <FontAwesome 
+            name={isLiked ? "heart" : "heart-o"} 
+            style={[styles.heartIcon, { color: isLiked ? '#FF6B6B' : '#999' }]} 
+          />
+        </TouchableOpacity>
+      </View>
 
-              <ThemedText type='default' fontFamily='poppins' color = '#666' fontSize={12}>
-                ({reviewCount})
-              </ThemedText>
-            </View>
-            
-            {/* Price */}
-            <ThemedText type='default' fontFamily='poppins' fontSize={12}>
-            from {priceFrom}{pricePerAdult ? ' per adult' : ''}
-            </ThemedText>
-            
-            {/* Location */}
-            <ThemedText type='default' fontFamily='poppins' color='#FF6B6B' fontSize={12}>
-            {location}
-            </ThemedText>
+      {/* Content */}
+      <View style={styles.content}>
+        <ThemedText type='subtitle' fontFamily='poppins' fontSize={14}>
+          {name}
+        </ThemedText>
+        
+        <View style={styles.ratingContainer}>
+          <ThemedText type='default' fontFamily='poppins' fontSize={12}>
+            {rating.toFixed(1)}
+          </ThemedText>
+          <View style={{flexDirection: 'row'}}>{renderStars()}</View>
+          <ThemedText type='default' fontFamily='poppins' color = '#666' fontSize={12}>
+            ({reviewCount})
+          </ThemedText>
         </View>
+        
+        <ThemedText type='default' fontFamily='poppins' fontSize={12}>
+          from {priceFrom}{pricePerAdult ? ' per day' : ''}
+        </ThemedText>
+        
+        <ThemedText type='default' fontFamily='poppins' color='#FF6B6B' fontSize={12}>
+          {location}
+        </ThemedText>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -112,10 +117,37 @@ const styles = StyleSheet.create({
       overflow: 'hidden',
       width: 160,
     },
+    imageContainer: {
+      position: 'relative',
+    },
     image: {
       width: 160,
       height: 120,
       borderRadius: 10,
+    },
+    popularTag: {
+      position: 'absolute',
+      top: 8,
+      left: 8,
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    heartContainer: {
+      position: 'absolute',
+      top: 8,
+      right: 8,
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      borderRadius: 15,
+      width: 30,
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    heartIcon: {
+      color: '#FF6B6B',
+      fontSize: 16,
     },
     content: {
       paddingTop: 10,

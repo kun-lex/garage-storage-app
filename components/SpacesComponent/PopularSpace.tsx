@@ -6,7 +6,7 @@ import SpaceCard from '../ui/Card/SpaceCards';
 type SpaceListProps = {
   title: string;
   data: {
-    id: number;
+    id: string;
     name: string;
     rating?: number;
     reviewCount?: number;
@@ -33,6 +33,7 @@ const SpaceList: React.FC<SpaceListProps> = ({ title, data }) => {
         {data.map((item) => (
           <SpaceCard
             key={item.id}
+            id={item.id}
             name={item.name}
             rating={item.rating}
             reviewCount={item.reviewCount}
@@ -40,6 +41,7 @@ const SpaceList: React.FC<SpaceListProps> = ({ title, data }) => {
             pricePerAdult={item.pricePerAdult}
             location={item.location}
             imageSource={item.imageSource}
+            showPopularTag={true}
             onPress={item.onPress}
           />
         ))}
