@@ -1,6 +1,6 @@
 # My Project Documentation
 
-Poject Challenge: Garage Storage Marketplace – Airbnb-style platform for renting out unused garage space
+Project Challenge: Garage Storage Marketplace – Airbnb-style platform for renting out unused garage space
 
 📌 Why i choose this challenge
 
@@ -10,7 +10,7 @@ I decided to take on the Garage Storage Marketplace challenge because it combine
     Many people have unused garage space while others struggle with finding affordable, nearby storage.
     This challenge tackles a practical problem with a solution similar to Airbnb’s proven model.
 
-2. Complex System Designß
+2. Complex System Design
     The project requires handling two sides of a marketplace: hosts (garage owners) and renters (users needing storage).
     It pushes me to think about authentication, payments, booking systems, reviews, maps, and availability management.
 
@@ -45,8 +45,7 @@ I decided to take on the Garage Storage Marketplace challenge because it combine
 2. Scaling the App
     Offline Mode – Cache recent searches & bookings with AsyncStorage.
     Push Notifications – Booking confirmation, reminders, and updates via Firebase.
-    Performance Optimizations –
-    Lazy load images.
+    Performance Optimizations – Lazy load images.
     Pagination for listings.
     React Native Reanimated for smooth UX.
 
@@ -56,9 +55,11 @@ I decided to take on the Garage Storage Marketplace challenge because it combine
     Navigation – Expo Router for stack & tab flows.
     Modular Structure – Separate features:
     auth/ (login, signup)
-    listings/ (create & view garages)
+    Wishlist/ ( view garages)
     booking/ (checkout, history)
     profile/ (user info, settings)
+    message/ (Send message to garage owners)
+    explore/ (View all garage listing)
     Scalability – Code splitting, TypeScript strict typing, and clean folder structure.
 
 4. Future Enhancements
