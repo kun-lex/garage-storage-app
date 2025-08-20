@@ -14,12 +14,19 @@ export type Product = {
 
 export interface ProductSlice {
   likedProducts: Product[];
+  selectedProduct: Product | null;
+  setSelectedProduct: (product: Product) => void;
   toggleLike: (product: Product) => void;
   isLiked: (id: string) => boolean;
 }
 
 export const createProductSlice: StateCreator<ProductSlice> = (set, get) => ({
   likedProducts: [],
+  selectedProduct: null,
+
+  setSelectedProduct: (product) => {
+    set({ selectedProduct: product });
+  },
 
   toggleLike: (product) => {
     const { likedProducts } = get();

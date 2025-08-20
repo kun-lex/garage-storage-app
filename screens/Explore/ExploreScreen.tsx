@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/api/Onboarding/Actions/AuthSlice'
 import { loginUser } from '@/api/Onboarding/Hooks/useAuth'
 import HeaderNavWithSearchComponent from '@/components/Headers/HeaderNavWithSearchComponent'
 import Spaces from '@/components/SpacesComponent/Spaces'
@@ -33,8 +34,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const ExploreScreen = () => {
-  const [activeTab, setActiveTab] = useState('Spaces')
-  const [isAuthenticated, setIsAuthenticated] = useState(false) // toggle for testing
+    const [activeTab, setActiveTab] = useState('Spaces')
+    const { token, user } = useAuthStore(state => state);
+    const isAuthenticated = !!token;
     const [showModal, setShowModal] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [email, setUserEmail] = useState<string>('');
@@ -148,6 +150,7 @@ const ExploreScreen = () => {
         {showModal && (
           <GestureDetector gesture={panGesture}>
             <AnimatedReanimated.View style={[styles.modal, animatedStyle]}>
+                <View style={styles.handle} />
                 <ThemedText
                   type='title'
                   fontSize={16}

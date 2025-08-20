@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/api/Onboarding/Actions/AuthSlice'
 import { loginUser } from '@/api/Onboarding/Hooks/useAuth'
 import { ThemedText } from '@/components/ThemedText'
 import ThemedButton from '@/components/ui/Button/ThemedButton'
@@ -33,6 +34,9 @@ const LoginScreen = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setUserEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const { user, token } = useAuthStore(state => state);
+  const isAuthenticated = !!token;
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -112,13 +116,23 @@ const LoginScreen = () => {
           <ThemedText type='defaultSemiBold' fontFamily='poppins' fontSize={24} >
             Profile
           </ThemedText>
-          <ThemedText type='default' color='gray' fontFamily='poppins' fontSize={12}>
-            Log in and start viewing garage spaces.
-          </ThemedText>
-          <ThemedButton 
-            title='Log in or sign up' 
-            onPress={openModal}
-          />
+          {isAuthenticated ? (
+            <>
+              <ThemedText type='default' color='gray' fontFamily='poppins' fontSize={12}>
+                Welcome back, {user?.first_Name || user?.email} 👋
+              </ThemedText>
+            </>
+          ) : (
+            <>
+              <ThemedText type='default' color='gray' fontFamily='poppins' fontSize={12}>
+                Log in and start viewing garage spaces.
+              </ThemedText>
+              <ThemedButton 
+                title='Log in or sign up' 
+                onPress={openModal} 
+              />
+            </>
+          )}
           <View style={ styles.horizontalLine } />
 
           <TouchableOpacity style={styles.spacedRow} >

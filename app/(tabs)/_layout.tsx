@@ -3,11 +3,14 @@ import React from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 // ICONS
+import { useAuthStore } from '@/api/Onboarding/Actions/AuthSlice';
 import { Colors } from '@/constants/Colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
+  const { token } = useAuthStore(state => state);
+  const isAuthenticated = !!token;
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -31,7 +34,6 @@ export default function TabLayout() {
               />
             );
           }
-          
         })}
       >
         <Tabs.Screen
@@ -49,6 +51,7 @@ export default function TabLayout() {
             ),
           }}
         />
+
         <Tabs.Screen
           name="Wishlist/index"
           options={{
@@ -76,7 +79,6 @@ export default function TabLayout() {
                 <Text style={styles.label}>Space</Text>
               ),
             tabBarIcon: ({ focused }) => (
-              // <MaterialCommunityIcons name="garage-open-variant" size={24} color={focused ? "#FF725E" : "#656565"} />
               <MaterialIcons name="garage" size={30} color={focused ? "#FF725E" : "#656565"} />
             ),
           }}
@@ -98,25 +100,30 @@ export default function TabLayout() {
           }}
         />
 
-
         <Tabs.Screen
           name="Login/index"
           options={{
-            title: 'Log in',
+            title: isAuthenticated ? 'Profile' : 'Log in',
             tabBarLabel: ({ focused }) =>
               focused ? (
-                <Text style={styles.foucedLabel}>Log in</Text>
+                <Text style={styles.foucedLabel}>
+                  {isAuthenticated ? 'Profile' : 'Log in'}
+                </Text>
               ) : (
-                <Text style={styles.label}>Log in</Text>
+                <Text style={styles.label}>
+                  {isAuthenticated ? 'Profile' : 'Log in'}
+                </Text>
               ),
-            tabBarIcon: ({ focused }) => (
-              <AntDesign name="login" size={24} color={focused ? "#FF725E" : "#656565"} />
-            ),
+            tabBarIcon: ({ focused }) =>
+              isAuthenticated ? (
+                <AntDesign name="user" size={24} color={focused ? "#FF725E" : "#656565"} />
+              ) : (
+                <AntDesign name="login" size={24} color={focused ? "#FF725E" : "#656565"} />
+              ),
           }}
         />
-      </Tabs>      
+      </Tabs>
     </View>
-
   );
 }
 
@@ -144,5 +151,5 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#FF725E',
     marginTop: 10,
-  },  
+  },
 });

@@ -2,9 +2,9 @@ import { Product } from '@/api/Product/Actions/ProductSlice';
 import { useProduct } from '@/api/Product/Hooks/useProduct';
 import { ThemedText } from '@/components/ThemedText';
 import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-
 
 type SpaceCardProps = Product & {
   onPress?: () => void;
@@ -14,10 +14,38 @@ type SpaceCardProps = Product & {
 };
 
 const SpaceCard = (props: SpaceCardProps) => {
-  const { id, name, rating = 4.0, reviewCount = 5, priceFrom, pricePerAdult = true, location, imageSource, onPress, containerStyle, imageStyle, showPopularTag = false } = props;
+  const { 
+    id, 
+    name, 
+    rating = 4.0, 
+    reviewCount = 5, 
+    priceFrom, 
+    pricePerAdult = true, 
+    location, 
+    imageSource, 
+    onPress, 
+    containerStyle, 
+    imageStyle, 
+    showPopularTag = false 
+  } = props;
 
+  const router = useRouter();
   const toggleLike = useProduct((state) => state.toggleLike);
+  const setSelectedProduct = useProduct((state) => state.setSelectedProduct);
   const isLiked = useProduct((state) => state.isLiked(id));
+
+  const handleCardPress = () => {
+    // Set the selected product in the store
+    setSelectedProduct(props);
+    
+    // Navigate to product details screen
+    router.push('/(routes)/Product/ProductDetails');
+    
+    // Call custom onPress if provided
+    if (onPress) {
+      onPress();
+    }
+  };
 
   const renderStars = () => {
     const stars = [];
@@ -39,7 +67,7 @@ const SpaceCard = (props: SpaceCardProps) => {
   return (
     <TouchableOpacity 
       style={[styles.container, containerStyle]} 
-      onPress={onPress}
+      onPress={handleCardPress}
       activeOpacity={0.8}
     >
       {/* Image */}
@@ -185,7 +213,7 @@ const styles = StyleSheet.create({
     },
     location: {
       fontSize: 14,
-      color: '#FF6B6B', // Orange/red color to match the design
+      color: '#FF6B6B',
       fontWeight: '400',
     },
-  });
+});

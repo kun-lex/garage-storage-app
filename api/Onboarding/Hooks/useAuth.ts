@@ -12,14 +12,49 @@ interface UserData {
   address?: string;
   role: 'user' | 'artisan' | 'admin' | 'business';
   created_at: string;
+  password: string;
 }
 
 const generateToken = (email: string) => {
   return `fake-jwt-token-${email}-${Date.now()}`;
 };
 
-const mockUsers: UserData[] = [];
+const mockUsers: UserData[] = [
+  {
+    id: "1",
+    email: "test@example.com",
+    password: "password123",
+    first_Name: "Test",
+    last_Name: "User",
+    role: 'user',
+    phone: '07052581498',
+    date_of_birth: '1999-06-07',
+    created_at: '2025-06-07'
 
+  },
+  {
+    id: "2",
+    email: "demo@example.com",
+    password: "demo123",
+    first_Name: "Demo",
+    last_Name: "User",
+    role: 'user',
+    phone: '07052581498',
+    date_of_birth: '1999-06-07',
+    created_at: '2025-06-07'
+  },
+  {
+    id: "3",
+    email: "dev.akinoladavid@yahoo.com",
+    password: "Akinola12",
+    first_Name: "Demo",
+    last_Name: "User",
+    role: 'user',
+    phone: '07052581498',
+    date_of_birth: '1999-06-07',
+    created_at: '2025-06-07'
+  },
+];
 export const setUserEmail = async (email: string) => {
   try {
     useAuthStore.getState().setEmail(email);
@@ -32,31 +67,34 @@ export const setUserEmail = async (email: string) => {
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const user = mockUsers.find(u => u.email === email);
-    
+    const user = mockUsers.find(
+      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+    );
+
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found or invalid credentials");
     }
 
     const token = generateToken(email);
-    
+
     useAuthStore.getState().setAuthData({
       token,
-      user
+      user,
     });
 
-    router.push('/(tabs)/Explore');
-    
+    router.push("/(tabs)/Explore");
+
     return {
       token,
       userId: user.id,
       email,
     };
   } catch (error: any) {
-    console.error('Login error:', error.message);
-    throw new Error(error.message || 'Login failed');
+    console.error("Login error:", error.message);
+    throw new Error(error.message || "Login failed");
   }
 };
+
 
 export const registerUser = async ({
   firstName,
@@ -64,12 +102,14 @@ export const registerUser = async ({
   email,
   dateOfBirth,
   phoneNumber,
+  password
 }: {
   firstName: string;
   lastName: string;
   email: string;
   dateOfBirth: string;
   phoneNumber: string;
+  password: string
 }) => {
   try {
     // Check if user already exists
@@ -84,6 +124,7 @@ export const registerUser = async ({
       first_Name: firstName,
       last_Name: lastName,
       email,
+      password,
       phone: phoneNumber,
       date_of_birth: dateOfBirth,
       role: 'user',
